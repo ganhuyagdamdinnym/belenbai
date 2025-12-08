@@ -56,12 +56,11 @@ export const SelectLocation = (props: Props) => {
   };
 
   return (
-    <div className="w-full grid grid-cols-3 gap-4">
-      {/* Aimag */}
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div className="flex flex-col gap-1">
-        <p>Аймаг/Хот</p>
+        <p className="text-sm sm:text-base">Аймаг/Хот</p>
         <select
-          className="border-gray-300 border-[1px] rounded-md p-2"
+          className="border-gray-300 border rounded-md max-w-[250px] p-2 text-sm sm:text-base"
           value={selectedAimag}
           onChange={(e) => {
             setSelectedAimag(e.target.value);
@@ -80,9 +79,11 @@ export const SelectLocation = (props: Props) => {
 
       {/* Sum */}
       <div className="flex flex-col gap-1">
-        <p>Сум/Дүүрэг</p>
+        <p className="text-sm sm:text-base">Сум/Дүүрэг</p>
         <select
-          className="border-gray-300 border-[1px] rounded-md p-2"
+          className={`border-gray-300 border ${
+            selectedAimag == "" ? "bg-gray-300" : null
+          } rounded-md p-2 max-w-[250px] text-sm sm:text-base`}
           value={selectedSum}
           onChange={(e) => {
             setSelectedSum(e.target.value);
@@ -100,11 +101,12 @@ export const SelectLocation = (props: Props) => {
         </select>
       </div>
 
-      {/* Bag */}
       <div className="flex flex-col gap-1">
-        <p>Баг/Хороо</p>
+        <p className="text-sm sm:text-base">Баг/Хороо</p>
         <select
-          className="border-gray-300 border-[1px] rounded-md p-2"
+          className={`border-gray-300 border ${
+            selectedSum == "" ? "bg-gray-300" : null
+          } rounded-md p-2 max-w-[250px] text-sm sm:text-base`}
           value={selectedBag}
           onChange={(e) => setSelectedBag(e.target.value)}
           disabled={!selectedSum}
