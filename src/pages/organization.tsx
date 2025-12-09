@@ -7,13 +7,18 @@ import { Safeway } from "../components/safeWay";
 // import { setFips } from "crypto";
 
 const Organization = () => {
+  const [allAnswers, setAllAnswers] = useState<any[]>([]);
   const [selectedAimag, setSelectedAimag] = useState<string>("");
   const [selectedSum, setSelectedSum] = useState<string>("");
   const [selectedBag, setSelectedBag] = useState<string>("");
   const [BusinessType, setBusinessType] = useState<string>("");
   const [count, setCount] = useState<number>(1);
   const [isFilled, setIsFilled] = useState<boolean>(false);
+  const handleSaveForm1 = (resultArray: any[]) => {
+    setAllAnswers((prev) => [...prev, ...resultArray]);
+  };
   const ClickOnNext = () => {
+    console.log("all", allAnswers);
     if (count == 1 && (selectedBag == "" || BusinessType == "")) {
       return;
     } else if (count == 2 && isFilled == false) {
@@ -93,7 +98,7 @@ const Organization = () => {
 
         <div>
           {count === 2 ? (
-            <Form setIsFilled={setIsFilled} />
+            <Form setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : count === 3 ? (
             <FireSafe setIsFilled={setIsFilled} />
           ) : count === 4 ? (
