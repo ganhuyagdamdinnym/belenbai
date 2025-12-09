@@ -15,12 +15,29 @@ const Organization = () => {
   const [count, setCount] = useState<number>(1);
   const [isFilled, setIsFilled] = useState<boolean>(false);
   const handleSaveForm1 = (resultArray: any[]) => {
-    setAllAnswers((prev) => [...prev, ...resultArray]);
+    const category = resultArray[0]?.category;
+
+    setAllAnswers((prev) => {
+      // тухайн category-ийн хуучин хариултуудыг устгана
+      const filtered = prev.filter((e) => e.category !== category);
+
+      // шинэ хариултуудыг нэмж буцаана
+      return [...filtered, ...resultArray];
+    });
   };
   const ClickOnNext = () => {
-    console.log("all", allAnswers);
-    if (count == 1 && (selectedBag == "" || BusinessType == "")) {
-      return;
+    console.log("data", allAnswers);
+    if (count == 1) {
+      if (selectedBag == "" || BusinessType == "") return;
+      const locationData = {
+        category: "Байршлын мэдээлэл",
+        aimag: selectedAimag,
+        sum: selectedSum,
+        bag: selectedBag,
+        businessType: BusinessType,
+      };
+
+      setAllAnswers((prev) => [...prev, locationData]);
     } else if (count == 2 && isFilled == false) {
       return;
     } else if (count == 3 && isFilled == false) {
@@ -98,13 +115,19 @@ const Organization = () => {
 
         <div>
           {count === 2 ? (
-            <Form setIsFilled={setIsFilled} setResult={handleSaveForm1} />
+            <Form
+              setIsFilled={setIsFilled}
+              setResult={handleSaveForm1}
+              initialAnswers={allAnswers
+                .filter((a) => a.category === "Ерөнхий мэдлэг")
+                .map((a) => (a.answer === "Тийм" ? 0 : 1))}
+            />
           ) : count === 3 ? (
-            <FireSafe setIsFilled={setIsFilled} />
+            <FireSafe setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : count === 4 ? (
-            <Prepare setIsFilled={setIsFilled} />
+            <Prepare setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : count === 5 ? (
-            <Safeway setIsFilled={setIsFilled} />
+            <Safeway setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : null}
         </div>
 

@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 type Props = {
   setIsFilled: React.Dispatch<React.SetStateAction<boolean>>;
   setResult: (result: any[]) => void;
+  initialAnswers?: number[];
 };
 export const Form = (props: Props) => {
-  const { setIsFilled, setResult } = props;
+  const { setIsFilled, setResult, initialAnswers } = props;
   const data = [
     {
       question: "Ажилчдаа тогтмол гамшгаас хамгаалах сургалтад хамруулдаг уу?",
@@ -32,7 +33,9 @@ export const Form = (props: Props) => {
     },
   ];
 
-  const [answers, setAnswers] = useState<number[]>(Array(data.length).fill(-1));
+  const [answers, setAnswers] = useState<number[]>(
+    initialAnswers ?? Array(data.length).fill(-1)
+  );
 
   const handleSelect = (index: number, value: number) => {
     const updated = [...answers];

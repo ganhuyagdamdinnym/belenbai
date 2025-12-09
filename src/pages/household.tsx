@@ -7,14 +7,36 @@ import { Prepare } from "../houseHoldComponents/prepare";
 import { PublicWay } from "../houseHoldComponents/publicWay";
 
 const Household = () => {
+  const [allAnswers, setAllAnswers] = useState<any[]>([]);
   const [selectedAimag, setSelectedAimag] = useState<string>("");
   const [selectedSum, setSelectedSum] = useState<string>("");
   const [selectedBag, setSelectedBag] = useState<string>("");
   const [count, setCount] = useState<number>(1);
   const [isFilled, setIsFilled] = useState<boolean>(false);
+
+  const handleSaveForm1 = (resultArray: any[]) => {
+    const category = resultArray[0]?.category;
+
+    setAllAnswers((prev) => {
+      // тухайн category-ийн хуучин хариултуудыг устгана
+      const filtered = prev.filter((e) => e.category !== category);
+
+      // шинэ хариултуудыг нэмж буцаана
+      return [...filtered, ...resultArray];
+    });
+  };
   const ClickOnNext = () => {
-    if (count === 1 && selectedBag == "") {
-      return;
+    console.log("data", allAnswers);
+    if (count == 1) {
+      if (selectedBag == "") return;
+      const locationData = {
+        category: "Байршлын мэдээлэл",
+        aimag: selectedAimag,
+        sum: selectedSum,
+        bag: selectedBag,
+      };
+
+      setAllAnswers((prev) => [...prev, locationData]);
     } else if (count == 2 && isFilled == false) {
       return;
     } else if (count == 3 && isFilled == false) {
@@ -72,13 +94,16 @@ const Household = () => {
 
         <div>
           {count === 2 ? (
-            <BackgroundKnowledge setIsFilled={setIsFilled} />
+            <BackgroundKnowledge
+              setIsFilled={setIsFilled}
+              setResult={handleSaveForm1}
+            />
           ) : count === 3 ? (
-            <FireSafe setIsFilled={setIsFilled} />
+            <FireSafe setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : count === 4 ? (
-            <Prepare setIsFilled={setIsFilled} />
+            <Prepare setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : count === 5 ? (
-            <PublicWay setIsFilled={setIsFilled} />
+            <PublicWay setIsFilled={setIsFilled} setResult={handleSaveForm1} />
           ) : null}
         </div>
 

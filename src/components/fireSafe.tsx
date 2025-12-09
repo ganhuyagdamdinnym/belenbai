@@ -1,9 +1,10 @@
 import { useState } from "react";
 type Props = {
   setIsFilled: React.Dispatch<React.SetStateAction<boolean>>;
+  setResult: (result: any[]) => void;
 };
 export const FireSafe = (props: Props) => {
-  const { setIsFilled } = props;
+  const { setIsFilled, setResult } = props;
   const data = [
     {
       question: "Цахилгааны монтаж болон цахилгаан хэрэгсэл гэмтэлгүй юу?",
@@ -27,13 +28,23 @@ export const FireSafe = (props: Props) => {
 
   const [answers, setAnswers] = useState<number[]>(Array(data.length).fill(-1));
 
-  const handleSelect = (qIndex: number, value: number) => {
-    const newAnswers = [...answers];
-    newAnswers[qIndex] = value;
-    setAnswers(newAnswers);
+  const handleSelect = (index: number, value: number) => {
+    const updated = [...answers];
+    updated[index] = value;
+    setAnswers(updated);
 
-    const filled = newAnswers.every((a) => a !== -1);
+    const filled = updated.every((v) => v !== -1);
     setIsFilled(filled);
+
+    if (filled) {
+      const result = data.map((q, i) => ({
+        category: "Галын аюулгүй байдал",
+        question: q.question,
+        answer: updated[i] === 0 ? "Тийм" : "Үгүй",
+      }));
+
+      setResult(result);
+    }
   };
 
   return (

@@ -77,7 +77,6 @@ export const SelectLocation = (props: Props) => {
         </select>
       </div>
 
-      {/* Sum */}
       <div className="flex flex-col gap-1">
         <p className="text-sm sm:text-base">Сум/Дүүрэг</p>
         <select

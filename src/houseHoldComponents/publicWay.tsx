@@ -1,6 +1,7 @@
 import { useState } from "react";
 type Props = {
   setIsFilled: React.Dispatch<React.SetStateAction<boolean>>;
+  setResult: (result: any[]) => void;
 };
 export const PublicWay = (props: Props) => {
   const { setIsFilled } = props;

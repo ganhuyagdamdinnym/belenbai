@@ -1,12 +1,15 @@
 import { SelectLocation } from "../components/selectLocation";
 import { useState } from "react";
-import { Form } from "../components/organizitioForm_one";
+
+import { BackgroundForm } from "../individualComponents/backgroundForm";
+import { SecondForm } from "../individualComponents/secondForm";
 
 const Individual = () => {
   const [selectedAimag, setSelectedAimag] = useState<string>("");
   const [selectedSum, setSelectedSum] = useState<string>("");
   const [selectedBag, setSelectedBag] = useState<string>("");
   const [count, setCount] = useState<number>(1);
+  const [isFilled, setIsFilled] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center py-6 gap-6 px-4">
@@ -28,16 +31,6 @@ const Individual = () => {
               selectedBag={selectedBag}
             />
           </div>
-
-          {/* <div className="w-full flex flex-col">
-            <p className="font-semibold text-[14px] sm:text-[18px]">
-              Үйл ажиллагааны чиглэл
-            </p>
-            <input
-              placeholder="Үйл ажиллагааны чиглэлээ бичнэ үү"
-              className="w-full h-12 border border-gray-300 rounded-md p-4 text-sm sm:text-base"
-            />
-          </div> */}
         </div>
       )}
 
@@ -45,20 +38,18 @@ const Individual = () => {
         <div className="w-full h-4 bg-gray-300 rounded-3xl">
           <div
             className={`${
-              count === 1
-                ? "w-1/5"
-                : count === 2
-                ? "w-2/5"
-                : count === 3
-                ? "w-3/5"
-                : count === 4
-                ? "w-4/5"
-                : "w-full"
+              count === 1 ? "w-1/2" : count === 2 ? "w-2/2" : "w-full"
             } bg-amber-500 h-full rounded-3xl transition-all duration-300`}
           />
         </div>
 
-        {/* <div>{count === 2 ? <Form /> : null}</div> */}
+        <div>
+          {count === 1 ? (
+            <BackgroundForm setIsFilled={setIsFilled} />
+          ) : count === 2 ? (
+            <SecondForm setIsFilled={setIsFilled} />
+          ) : null}
+        </div>
 
         <div className="w-full flex justify-between">
           {count !== 1 ? (
