@@ -1,65 +1,148 @@
-import { useState } from "react";
-
-type Props = {
-  setIsFilled: React.Dispatch<React.SetStateAction<boolean>>;
+type QuestionItem = {
+  question: string;
+  answer: string | null;
 };
 
-export const BackgroundForm = ({ setIsFilled }: Props) => {
-  const data = [
-    {
-      question: "Та хэдэн настай вэ?",
-      answers: ["18 хүртэл", "18-45", "45-аас дээш"],
-    },
-    {
-      question: "Таны хүйс?",
-      answers: ["Эрэгтэй", "Эмэгтэй"],
-    },
-    {
-      question: "Таны боловсролын түвшин?",
-      answers: ["Боловсролгүй", "Бага", "Дунд", "Дээд"],
-    },
-  ];
+type CategoryItem = {
+  category: string;
+  questions: QuestionItem[];
+};
 
-  const [answers, setAnswers] = useState<number[]>(Array(data.length).fill(-1));
+type Props = {
+  questions: CategoryItem[] | null;
+  setQuestions: React.Dispatch<React.SetStateAction<CategoryItem[] | null>>;
+};
 
-  const handleSelect = (qIndex: number, optionIndex: number) => {
-    const updated = [...answers];
-    updated[qIndex] = optionIndex;
-    setAnswers(updated);
+export const BackgroundForm = (props: Props) => {
+  const { questions, setQuestions } = props;
 
-    const filled = updated.every((v) => v !== -1);
-    setIsFilled(filled);
+  if (!questions) return null;
+
+  const updateAnswer = (
+    categoryIndex: number,
+    questionIndex: number,
+    answer: string
+  ) => {
+    setQuestions((prev) => {
+      if (!prev) return prev;
+
+      const updated = [...prev];
+
+      updated[categoryIndex] = {
+        ...updated[categoryIndex],
+        questions: updated[categoryIndex].questions.map((q, idx) =>
+          idx === questionIndex ? { ...q, answer } : q
+        ),
+      };
+
+      return updated;
+    });
   };
 
   return (
     <div className="space-y-4">
-      <p className="text-[22px] font-semibold">Галын аюулгүй байдал</p>
+      <div>
+        <p className="font-semibold mb-2">Та хэдэн настай вэ?</p>
+        <div className="flex flex-col gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="age"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 0, "18 хүртэл")}
+            />
+            <span>18 хүртэл</span>
+          </label>
 
-      {data.map((questionItem, qIndex) => (
-        <div key={qIndex}>
-          <p className="font-normal mb-2">
-            {qIndex + 1}. {questionItem.question}
-          </p>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="age"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 0, "18-45")}
+            />
+            <span>18-45</span>
+          </label>
 
-          <div className="flex flex-col gap-2">
-            {questionItem.answers.map((option, optionIndex) => (
-              <label
-                key={optionIndex}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name={`question-${qIndex}`}
-                  checked={answers[qIndex] === optionIndex}
-                  onChange={() => handleSelect(qIndex, optionIndex)}
-                  className="form-radio h-5 w-5 text-amber-500"
-                />
-                <span>{option}</span>
-              </label>
-            ))}
-          </div>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="age"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 0, "45-аас дээш")}
+            />
+            <span>45-аас дээш</span>
+          </label>
         </div>
-      ))}
+      </div>
+      <div>
+        <p className="font-semibold mb-2">Таны хүйс?</p>
+        <div className="flex flex-col gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="gender"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 1, "Эрэгтэй")}
+            />
+            <span>Эрэгтэй</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="gender"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 1, "Эмэгтэй")}
+            />
+            <span>Эмэгтэй</span>
+          </label>
+        </div>
+      </div>
+      <div>
+        <p className="font-semibold mb-2">Таны боловсролын түвшин?</p>
+        <div className="flex flex-col gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="education"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 2, "Боловсролгүй")}
+            />
+            <span>Боловсролгүй</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="education"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 2, "Бага")}
+            />
+            <span>Бага</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="education"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 2, "Дунд")}
+            />
+            <span>Дунд</span>
+          </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="education"
+              className="h-5 w-5 text-amber-500"
+              onChange={() => updateAnswer(0, 2, "Дээд")}
+            />
+            <span>Дээд</span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,82 +1,80 @@
-import { useState } from "react";
-type Props = {
-  setIsFilled: React.Dispatch<React.SetStateAction<boolean>>;
-  setResult: (result: any[]) => void;
+type QuestionItem = {
+  question: string;
+  answer: string | null;
 };
+
+type CategoryItem = {
+  category: string;
+  questions: QuestionItem[];
+};
+
+type Props = {
+  questions: CategoryItem | null;
+  setQuestions: React.Dispatch<React.SetStateAction<CategoryItem[] | null>>;
+};
+
 export const BackgroundKnowledge = (props: Props) => {
-  const { setIsFilled, setResult } = props;
-  const data = [
-    {
-      question:
-        "Танай гэр бүлийнхэн оршин сууж буй газартаа тохиолдож болзошгүй гамшиг, аюулт үзэгдэл, ослын тухай мэдэх үү?",
-    },
-    {
-      question:
-        " Мэргэжлийн байгууллагаас сэрэмжлүүлж буй гамшиг, аюулт үзэгдэл, ослын тухай мэдээ мэдээллийг ойлгож, хүлээн авдаг уу?",
-    },
-    {
-      question:
-        "  Аливаа гамшиг, тухайлбал гал түймэр, үер, газар хөдлөлт, хүчтэй салхи шуурга, аянга, халдварт өвчний өмнө, үед, дараа юу хийх тухай танай гэр бүлийн ойлголт мэдлэг хангалттай сайн уу?",
-    },
-    {
-      question:
-        " Гал түймэр, бусад гамшиг, аюулт үзэгдэл, осол тохиолдсон үед яаралтай дуудлага өгөх утасны дугаарыг мэдэх үү?",
-    },
-    {
-      question:
-        "  Гал түймэр, газар хөдлөлт зэрэг гамшгийн үед гэр, байшингаас яаралтай гарах аюулгүйн гарц, замаа мэдэх үү?",
-    },
-  ];
+  const { questions, setQuestions } = props;
+  const handleSelect = (questionIndex: number, value: number) => {
+    if (!questions) return;
 
-  const [answers, setAnswers] = useState<number[]>(Array(data.length).fill(-1));
+    setQuestions((prev) => {
+      if (!prev) return prev;
 
-  const handleSelect = (index: number, value: number) => {
-    const updated = [...answers];
-    updated[index] = value;
-    setAnswers(updated);
+      // find which category we are modifying
+      const categoryIndex = prev.findIndex(
+        (cat) => cat.category === questions.category
+      );
 
-    const filled = updated.every((v) => v !== -1);
-    setIsFilled(filled);
+      if (categoryIndex === -1) return prev;
 
-    if (filled) {
-      const result = data.map((q, i) => ({
-        category: "Ерөнхий мэдлэг",
-        question: q.question,
-        answer: updated[i] === 0 ? "Тийм" : "Үгүй",
-      }));
+      // create deep copy
+      const updated = [...prev];
 
-      setResult(result);
-    }
+      updated[categoryIndex] = {
+        ...updated[categoryIndex],
+        questions: updated[categoryIndex].questions.map((q, i) =>
+          i === questionIndex
+            ? { ...q, answer: value === 0 ? "тийм" : "үгүй" }
+            : q
+        ),
+      };
+      //console.log("data", questions);
+      return updated;
+    });
   };
+
+  if (!questions) return null;
 
   return (
     <div className="space-y-4">
-      <p className="text-[22px] font-semibold">
-        Гэр бүлийн гишүүдийн ерөнхий мэдлэг ойлголт
-      </p>
-      {data.map((e, index) => (
-        <div key={index} className="">
-          <p className="font-normal mb-2">
-            {index + 1}.{e.question}
+      <p className="text-[22px] font-semibold">{questions.category}</p>
+
+      {questions.questions.map((q, index) => (
+        <div key={index}>
+          <p className="font-semibold mb-2">
+            {index + 1}. {q.question}
           </p>
+
           <div className="flex gap-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
                 name={`question-${index}`}
-                checked={answers[index] === 0}
+                className="h-5 w-5 text-amber-500"
+                checked={q.answer === "тийм"} // ⭐ СОНГОГДСОН ЭСЭХИЙГ ХОЛБОЖ ӨГНӨ
                 onChange={() => handleSelect(index, 0)}
-                className="form-radio h-5 w-5 text-amber-500"
               />
               <span>Тийм</span>
             </label>
+
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="radio"
                 name={`question-${index}`}
-                checked={answers[index] === 1}
+                className="h-5 w-5 text-amber-500"
                 onChange={() => handleSelect(index, 1)}
-                className="form-radio h-5 w-5 text-amber-500"
+                checked={q.answer === "үгүй"}
               />
               <span>Үгүй</span>
             </label>

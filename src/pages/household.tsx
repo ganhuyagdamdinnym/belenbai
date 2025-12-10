@@ -1,61 +1,79 @@
 import { SelectLocation } from "../components/selectLocation";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { BackgroundKnowledge } from "../houseHoldComponents/backgroundKnowledge";
+
 import { FireSafe } from "../houseHoldComponents/fireSafe";
 import { Prepare } from "../houseHoldComponents/prepare";
 import { PublicWay } from "../houseHoldComponents/publicWay";
+import Datas from "../assets/householdQuestions.json";
 
-const Household = () => {
-  const [allAnswers, setAllAnswers] = useState<any[]>([]);
+type QuestionItem = {
+  question: string;
+  answer: string | null;
+};
+
+type CategoryItem = {
+  category: string;
+  questions: QuestionItem[];
+};
+const HouseHold = () => {
+  const [currentCategory, setCurrentCategory] = useState<string>("location");
   const [selectedAimag, setSelectedAimag] = useState<string>("");
   const [selectedSum, setSelectedSum] = useState<string>("");
   const [selectedBag, setSelectedBag] = useState<string>("");
-  const [count, setCount] = useState<number>(1);
-  const [isFilled, setIsFilled] = useState<boolean>(false);
+  const [questions, setQuestions] = useState<CategoryItem[] | null>(null);
 
-  const handleSaveForm1 = (resultArray: any[]) => {
-    const category = resultArray[0]?.category;
-
-    setAllAnswers((prev) => {
-      // тухайн category-ийн хуучин хариултуудыг устгана
-      const filtered = prev.filter((e) => e.category !== category);
-
-      // шинэ хариултуудыг нэмж буцаана
-      return [...filtered, ...resultArray];
-    });
-  };
-  const ClickOnNext = () => {
-    console.log("data", allAnswers);
-    if (count == 1) {
-      if (selectedBag == "") return;
-      const locationData = {
-        category: "Байршлын мэдээлэл",
-        aimag: selectedAimag,
-        sum: selectedSum,
-        bag: selectedBag,
-      };
-
-      setAllAnswers((prev) => [...prev, locationData]);
-    } else if (count == 2 && isFilled == false) {
-      return;
-    } else if (count == 3 && isFilled == false) {
-      return;
-    } else if (count == 4 && isFilled == false) {
-      return;
-    } else if (count == 5 && isFilled == false) {
-      return;
+  const handlePreviousCate = () => {
+    if (currentCategory == "backgroundInfo") {
+      setCurrentCategory("location");
+    } else if (currentCategory == "fireSafe") {
+      setCurrentCategory("backgroundInfo");
+    } else if (currentCategory == "prepare") {
+      setCurrentCategory("fireSafe");
+    } else if (currentCategory == "safeWay") {
+      setCurrentCategory("prepare");
     }
-    setCount(count + 1);
-    setIsFilled(false);
   };
-
+  const handleNext = () => {
+    if (questions !== null) {
+      if (selectedBag !== "" && currentCategory == "location") {
+        setCurrentCategory("backgroundInfo");
+      } else if (
+        currentCategory == "backgroundInfo" &&
+        questions[0].questions.every((e) => e.answer != null)
+      ) {
+        setCurrentCategory("fireSafe");
+      } else if (
+        currentCategory == "fireSafe" &&
+        questions[1].questions.every((e) => e.answer != null)
+      ) {
+        setCurrentCategory("prepare");
+      } else if (
+        currentCategory == "prepare" &&
+        questions[2].questions.every((e) => e.answer != null)
+      ) {
+        setCurrentCategory("safeWay");
+      }
+    }
+  };
+  const sendAnswer = () => {
+    if (questions !== null) {
+      if (questions[3].questions.every((e) => e.answer != null)) {
+        console.log("answer", questions);
+      }
+    }
+  };
+  useEffect(() => {
+    setQuestions(Datas as CategoryItem[]);
+  }, []);
   return (
     <div className="min-h-screen w-full flex flex-col items-center py-6 gap-6 px-4">
       <p className="font-bold text-[16px] sm:text-[24px] max-w-[900px] text-center">
-        Өрхийн гамшгийн бэлэн байдлаа шалгах “Аюулгүй өрх” хяналтын хуудас
+        Хуулийн этгээд, аж ахуйн нэгж, байгууллага гамшгийн бэлэн байдлаа шалгах
+        хяналтын хуудас
       </p>
-      {count === 1 && (
+
+      {currentCategory == "location" && (
         <div className="w-full max-w-[900px] flex flex-col gap-6">
           <div className="w-full">
             <p className="font-semibold text-[14px] sm:text-[18px]">
@@ -77,40 +95,53 @@ const Household = () => {
         <div className="w-full h-4 bg-gray-300 rounded-3xl">
           <div
             className={`${
-              count === 1
+              currentCategory == "location"
                 ? "w-1/5"
-                : count === 2
+                : currentCategory == "backgroundInfo"
                 ? "w-2/5"
-                : count === 3
+                : currentCategory == "fireSafe"
                 ? "w-3/5"
-                : count === 4
+                : currentCategory == "prepare"
                 ? "w-4/5"
-                : count === 5
+                : currentCategory == "safeWay"
                 ? "w-5/5"
                 : "w-full"
             } bg-amber-500 h-full rounded-3xl transition-all duration-300`}
           />
         </div>
-
-        <div>
-          {count === 2 ? (
-            <BackgroundKnowledge
-              setIsFilled={setIsFilled}
-              setResult={handleSaveForm1}
-            />
-          ) : count === 3 ? (
-            <FireSafe setIsFilled={setIsFilled} setResult={handleSaveForm1} />
-          ) : count === 4 ? (
-            <Prepare setIsFilled={setIsFilled} setResult={handleSaveForm1} />
-          ) : count === 5 ? (
-            <PublicWay setIsFilled={setIsFilled} setResult={handleSaveForm1} />
-          ) : null}
-        </div>
+        {currentCategory == "backgroundInfo" ? (
+          <div>
+            {questions && (
+              <BackgroundKnowledge
+                questions={questions[0]}
+                setQuestions={setQuestions}
+              />
+            )}
+          </div>
+        ) : currentCategory == "fireSafe" ? (
+          <div>
+            {questions && (
+              <FireSafe questions={questions[1]} setQuestions={setQuestions} />
+            )}
+          </div>
+        ) : currentCategory == "prepare" ? (
+          <div>
+            {questions && (
+              <Prepare questions={questions[2]} setQuestions={setQuestions} />
+            )}
+          </div>
+        ) : currentCategory == "safeWay" ? (
+          <div>
+            {questions && (
+              <PublicWay questions={questions[3]} setQuestions={setQuestions} />
+            )}
+          </div>
+        ) : null}
 
         <div className="w-full flex justify-between">
-          {count !== 1 ? (
+          {currentCategory !== "location" ? (
             <button
-              onClick={() => setCount(count - 1)}
+              onClick={handlePreviousCate}
               className="px-4 py-2 bg-gray-600 rounded-md"
             >
               <p className="text-white font-semibold">Өмнөх</p>
@@ -118,14 +149,16 @@ const Household = () => {
           ) : (
             <div></div>
           )}
-
-          {count === 5 ? (
-            <button className="px-4 py-2 bg-green-600 rounded-md">
+          {currentCategory == "safeWay" ? (
+            <button
+              onClick={sendAnswer}
+              className="px-4 py-2 bg-green-600 rounded-md"
+            >
               <p className="text-white font-semibold">Хариултыг илгээх</p>
             </button>
           ) : (
             <button
-              onClick={ClickOnNext}
+              onClick={handleNext}
               className="px-4 py-2 bg-amber-500 rounded-md"
             >
               <p className="text-white font-semibold">Дараах</p>
@@ -137,4 +170,4 @@ const Household = () => {
   );
 };
 
-export default Household;
+export default HouseHold;
