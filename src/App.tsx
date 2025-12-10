@@ -19,32 +19,41 @@ function App() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px]">
         <Link to="/organization">
           <div
-            className="opacit w-full h-[250px] sm:h-[300px] bg-cover bg-center rounded-2xl p-4 flex items-end 
-                       text-white font-bold text-lg drop-shadow-lg"
+            className="relative w-full h-[250px] sm:h-[300px] bg-cover bg-center rounded-2xl p-4 flex items-end drop-shadow-lg"
             style={{ backgroundImage: "url('/zurag1.png')" }}
           >
-            Хуулийн этгээд, аж ахуйн нэгж, байгууллага гамшгийн бэлэн байдлаа
-            шалгах хяналтын хуудас
+            <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
+
+            <div className="relative text-white font-bold text-lg z-10">
+              Хуулийн этгээд, аж ахуйн нэгж, байгууллага гамшгийн бэлэн байдлаа
+              шалгах хяналтын хуудас
+            </div>
           </div>
         </Link>
 
         <Link to="/household">
           <div
-            className="w-full opacity- h-[250px] sm:h-[300px] bg-cover bg-center rounded-2xl p-4 flex items-end 
-                        text-white font-bold text-lg drop-shadow-lg"
+            className="relative w-full h-[250px] sm:h-[300px] bg-cover bg-center rounded-2xl p-4 flex items-end drop-shadow-lg"
             style={{ backgroundImage: "url('/zurag2.png')" }}
           >
-            Өрхийн гамшгийн бэлэн байдлаа шалгах “Аюулгүй өрх” хяналтын хуудас
+            <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
+
+            <div className="relative text-white font-bold text-lg z-10">
+              Өрхийн гамшгийн бэлэн байдлаа шалгах “Аюулгүй өрх” хяналтын хуудас
+            </div>
           </div>
         </Link>
 
         <Link to="/individual">
           <div
-            className="w-full h-[250px] sm:h-[300px] bg-cover bg-center rounded-2xl p-4 flex items-end 
-                        text-white font-bold text-lg drop-shadow-lg"
+            className="relative w-full h-[250px] sm:h-[300px] bg-cover bg-center rounded-2xl p-4 flex items-end drop-shadow-lg"
             style={{ backgroundImage: "url('/zurag4.png')" }}
           >
-            Иргэний гамшгаас хамгаалах ойлголт, мэдлэгийг шалгах асуумж
+            <div className="absolute inset-0 bg-black/40 rounded-2xl"></div>
+
+            <div className="relative text-white font-bold text-lg z-10">
+              Иргэний гамшгаас хамгаалах ойлголт, мэдлэгийг шалгах асуумж
+            </div>
           </div>
         </Link>
       </div>

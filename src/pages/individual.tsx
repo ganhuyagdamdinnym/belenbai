@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Form } from "../individualComponents/secondForm";
 import Datas from "../assets/individualQuestions.json";
 import { BackgroundForm } from "../individualComponents/backgroundForm";
+import { Link } from "react-router-dom";
 
 type QuestionItem = {
   question: string;
@@ -27,14 +28,8 @@ const Individual = () => {
   const [questions, setQuestions] = useState<CategoryItem[] | null>(null);
 
   const handlePreviousCate = () => {
-    if (currentCategory == "backgroundInfo") {
+    if (currentCategory == "form") {
       setCurrentCategory("location");
-    } else if (currentCategory == "fireSafe") {
-      setCurrentCategory("backgroundInfo");
-    } else if (currentCategory == "prepare") {
-      setCurrentCategory("fireSafe");
-    } else if (currentCategory == "safeWay") {
-      setCurrentCategory("prepare");
     }
   };
   const handleNext = () => {
@@ -50,24 +45,37 @@ const Individual = () => {
     }
   };
   const sendAnswer = () => {
-    const loc = {
-      aimag: selectedAimag,
-      sum: selectedSum,
-      bag: selectedBag,
-    };
-    setLocation(loc);
     if (questions !== null) {
       if (questions[1].questions.every((e) => e.answer != null)) {
         console.log("answer", questions);
-        console.log("lpcation", location);
+        console.log("location", location);
       }
     }
   };
+  //console.log("tester", location);
   useEffect(() => {
     setQuestions(Datas as CategoryItem[]);
   }, []);
+  useEffect(() => {
+    setLocation({
+      aimag: selectedAimag,
+      sum: selectedSum,
+      bag: selectedBag,
+    });
+  }, [selectedBag, selectedSum, selectedAimag]);
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center py-6 gap-6 px-4">
+      <div className="w-full mt-[-10px]">
+        <Link to="/">
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-amber-500 rounded-md"
+          >
+            <p className="text-white font-semibold">Буцах</p>
+          </button>
+        </Link>
+      </div>
       <p className="font-bold text-[16px] sm:text-[24px] max-w-[900px] text-center">
         Иргэний гамшгаас хамгаалах ойлголт, мэдлэгийг шалгах асуумж
       </p>

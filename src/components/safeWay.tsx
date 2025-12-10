@@ -52,7 +52,7 @@ export const Safeway = (props: Props) => {
 
       {questions.questions.map((q, index) => (
         <div key={index}>
-          <p className="font-semibold mb-2">
+          <p className="font-normal mb-2">
             {index + 1}. {q.question}
           </p>
 

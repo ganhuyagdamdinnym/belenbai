@@ -1,7 +1,7 @@
 import { SelectLocation } from "../components/selectLocation";
 import { useState, useEffect } from "react";
 import { BackgroundKnowledge } from "../houseHoldComponents/backgroundKnowledge";
-
+import { Link } from "react-router-dom";
 import { FireSafe } from "../houseHoldComponents/fireSafe";
 import { Prepare } from "../houseHoldComponents/prepare";
 import { PublicWay } from "../houseHoldComponents/publicWay";
@@ -16,7 +16,13 @@ type CategoryItem = {
   category: string;
   questions: QuestionItem[];
 };
+type Location = {
+  aimag: string;
+  sum: string;
+  bag: string;
+};
 const HouseHold = () => {
+  const [location, setLocation] = useState<Location | null>(null);
   const [currentCategory, setCurrentCategory] = useState<string>("location");
   const [selectedAimag, setSelectedAimag] = useState<string>("");
   const [selectedSum, setSelectedSum] = useState<string>("");
@@ -60,19 +66,37 @@ const HouseHold = () => {
     if (questions !== null) {
       if (questions[3].questions.every((e) => e.answer != null)) {
         console.log("answer", questions);
+        console.log("location", location);
       }
     }
   };
   useEffect(() => {
     setQuestions(Datas as CategoryItem[]);
   }, []);
+  useEffect(() => {
+    setLocation({
+      aimag: selectedAimag,
+      sum: selectedSum,
+      bag: selectedBag,
+    });
+  }, [selectedBag, selectedSum, selectedAimag]);
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center py-6 gap-6 px-4">
+      <div className="w-full mt-[-10px]">
+        <Link to="/">
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-amber-500 rounded-md"
+          >
+            <p className="text-white font-semibold">Буцах</p>
+          </button>
+        </Link>
+      </div>
       <p className="font-bold text-[16px] sm:text-[24px] max-w-[900px] text-center">
         Хуулийн этгээд, аж ахуйн нэгж, байгууллага гамшгийн бэлэн байдлаа шалгах
         хяналтын хуудас
       </p>
-
       {currentCategory == "location" && (
         <div className="w-full max-w-[900px] flex flex-col gap-6">
           <div className="w-full">

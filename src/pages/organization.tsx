@@ -5,6 +5,7 @@ import { FireSafe } from "../components/fireSafe";
 import { Prepare } from "../components/prepare";
 import { Safeway } from "../components/safeWay";
 import Datas from "../assets/organizationQuestions.json";
+import { Link } from "react-router-dom";
 
 type QuestionItem = {
   question: string;
@@ -15,7 +16,14 @@ type CategoryItem = {
   category: string;
   questions: QuestionItem[];
 };
+
+type Location = {
+  aimag: string;
+  sum: string;
+  bag: string;
+};
 const Organization = () => {
+  const [location, setLocation] = useState<Location | null>(null);
   const [currentCategory, setCurrentCategory] = useState<string>("location");
   const [selectedAimag, setSelectedAimag] = useState<string>("");
   const [selectedSum, setSelectedSum] = useState<string>("");
@@ -60,14 +68,33 @@ const Organization = () => {
     if (questions !== null) {
       if (questions[3].questions.every((e) => e.answer != null)) {
         console.log("answer", questions);
+        console.log("location", location);
       }
     }
   };
+  useEffect(() => {
+    setLocation({
+      aimag: selectedAimag,
+      sum: selectedSum,
+      bag: selectedBag,
+    });
+  }, [selectedBag, selectedSum, selectedAimag]);
+
   useEffect(() => {
     setQuestions(Datas as CategoryItem[]);
   }, []);
   return (
     <div className="min-h-screen w-full flex flex-col items-center py-6 gap-6 px-4">
+      <div className="w-full mt-[-10px]">
+        <Link to="/">
+          <button
+            onClick={handleNext}
+            className="px-4 py-2 bg-amber-500 rounded-md"
+          >
+            <p className="text-white font-semibold">Буцах</p>
+          </button>
+        </Link>
+      </div>
       <p className="font-bold text-[16px] sm:text-[24px] max-w-[900px] text-center">
         Хуулийн этгээд, аж ахуйн нэгж, байгууллага гамшгийн бэлэн байдлаа шалгах
         хяналтын хуудас
